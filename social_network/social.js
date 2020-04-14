@@ -85,18 +85,90 @@ const list = {
     }
   };
 
+  unrequitedFollowers = (data) => {
+  sadFriends = [];
+  for (const elem in data) {
+    data[elem].follows.forEach((element) => {
+      if (list[element].follows.includes(elem) === false) {
+        if (sadFriends.includes(data[elem].name) === false) {
+          sadFriends.push(data[elem].name);
+        }
+      }
+    });
+  }
+  return sadFriends.toString();
+  };
 
-
-unrequitedFollowers = (data) => {
-sadFriends =[]
+  followsMostOverThirty = (data) => {
+    let preResult = [];
+    let agedResult = [];
     for (const elem in data) {
-    data[elem].follows.forEach(element => {
+      data[elem].oldFollowers = [];
+
+      for (const arrElem in data[elem].follows) {
+        if (data[data[elem].follows[arrElem]].age > 30) {
+          data[elem].oldFollowers.push(data[elem].follows[arrElem]);
+        }
+      }
+      preResult.push(data[elem]);
+    }
+    for (let i = 0; i < preResult.length; i++) {
+      for (let k = i + 1; k < preResult.length; k++) {
+        if (preResult[i].oldFollowers.length > preResult[k].oldFollowers.length) {
+          agedResult.push(preResult[i]);
+        }
+      }
+    }
+    const result = new Set(agedResult);
+    for (const elem of result) {
+      console.log(elem.name);
+    }
+  };
+  
+  mostOverThirtyFollowers = (data) => {
+  let oldFollowers = []
+    let preResult = []
+    for (const elem in data) {
+    data[elem].followedBy = []
+    for (const followElem in data){
+      if ((data[followElem].follows.includes(elem)) && (data[followElem].age > 30)) {
+        data[elem].followedBy.push(followElem)
+      }
+    }
+    preResult.push(data[elem])
+  }
+  for (let i = 0; i < preResult.length; i++) {
+    for (let k = i + 1; k < preResult.length; k++) {
+      if (preResult[i].followedBy.length > preResult[k].followedBy.length) {
+        oldFollowers.push(preResult[i]);
+      }
+    }
+  }
+  const result = new Set(oldFollowers);
+    for (const elem of result) {
+      console.log(elem.name);
+    }
+  }
+  
+  listReach = (data) => {
+    
+    for (const elem in data) {
+      data[elem].followedBy = []
+      
+      for (const followElem in data){
+        if ((data[followElem].follows.includes(elem))) {
+          data[elem].followedBy.push(followElem)
+        };
         
-        if (list[element].follows.includes(elem) === false)
-        { if (sadFriends.includes(data[elem].name) === false)
-            {sadFriends.push(data[elem].name)}}
-    })
-}
-return sadFriends.toString()
-}
-unrequitedFollowers(list)
+      }
+      data[elem].followerCount = data[elem].followedBy.length
+      
+      
+    }
+   for (const elem in data) {
+     data[elem].reach = 0
+     for (const reachElem of data[elem].followedBy){data[elem].reach += data[reachElem].followerCount}
+   }
+   console.log(data)
+  }
+  listReach(list)
