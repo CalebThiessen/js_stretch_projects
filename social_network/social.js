@@ -171,4 +171,4 @@ const list = {
    }
    console.log(data)
   }
-  listReach(list)
+  
